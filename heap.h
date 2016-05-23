@@ -56,8 +56,35 @@ public:
     };
 
     heap() :
-        store(nullptr), size(0), alloc(0)
+        store(nullptr), size(0), alloc(0), type(heap_type::min)
         { }
+
+    heap(const heap<DataType> &other)
+    {
+        store = new DataType[other.size];
+        copy_array_elements(store, other.store, other.size);
+        size = other.size;
+        alloc = size;
+    }
+
+    heap &operator=(const heap<DataType> &other)
+    {
+        DataType *temp;
+
+        if (size >= other.size) {
+            copy_array_elements(store, other.store, other.size);
+            size = other.size;
+            return *this;
+        } else {
+            temp = store;
+            store = new DataType[other.size];
+            copy_array_elements(store, other.store, other.size);
+            size = other.size;
+            alloc = other.size;
+            delete []temp;
+            return *this;
+        }
+    }
 
     heap(DataType *arr, int size)
     {
@@ -81,6 +108,11 @@ public:
         }
         this->size = end - start;
         this->alloc = this->size;
+    }
+
+    ~heap()
+    {
+        delete []store;
     }
 
     void set(enum heap_type type)
