@@ -46,10 +46,29 @@ public:
             return index;
         }
 
-        iterator operator++()
+        iterator& operator++()
+        {
+            this->index++;
+            return *this;
+        }
+
+        iterator operator--()
+        {
+            this->index--;
+            return *this;
+        }
+
+        iterator operator++(int)
         {
             return iterator(this->index++);
         }
+
+        iterator operator--(int)
+        {
+            return iterator(this->index--);
+        }
+
+
     private:
         /* I am storing the index only */
          index_offset_t index;
